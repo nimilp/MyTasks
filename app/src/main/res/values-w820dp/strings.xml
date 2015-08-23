@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="task_desc">Description</string>
+    <string name="task_cmt">Comment</string>
+    <string name="no_tasks">No Tasks!</string>
+</resources>

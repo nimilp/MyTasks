@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">My Tasks</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="task_desc">Description</string>
+    <string name="task_cmt">Comment</string>
+    <string name="task_remind">Reminder Date</string>
+    <string name="task_remind_days">Days to remind</string>
+    <string name="no_tasks">No Tasks!</string>
+    <string name="task_name">Task Name</string>
+</resources>
