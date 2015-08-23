@@ -25,5 +25,6 @@
         android:src="@mipmap/ic_action_add"
         app:layout_anchor="@id/mainLayout"
         app:layout_anchorGravity="bottom|end"
+
          />
 </android.support.design.widget.CoordinatorLayout>
