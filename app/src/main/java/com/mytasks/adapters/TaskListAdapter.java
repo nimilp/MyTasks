@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.mytasks.R;
@@ -89,6 +91,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
             viewHolder = new ChildViewHolder();
             viewHolder.desc = (TextView) convertView.findViewById(R.id.descTxt);
             viewHolder.comment = (TextView) convertView.findViewById(R.id.cmtTxt);
+            viewHolder.recur = (TextView) convertView.findViewById(R.id.recurText);
             viewHolder.date = (TextView) convertView.findViewById(R.id.dateTxt);
             viewHolder.days = (TextView) convertView.findViewById(R.id.daysTxt);
             convertView.setTag(viewHolder);
@@ -98,8 +101,12 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
 
         viewHolder.desc.setText(tasks.get(groupPosition).getDesc());
         viewHolder.comment.setText(tasks.get(groupPosition).getComments());
+        viewHolder.recur.setText(tasks.get(groupPosition).isRecur() ? "True" : "False");
         viewHolder.date.setText(tasks.get(groupPosition).getDate());
-        viewHolder.days.setText(String.valueOf(tasks.get(groupPosition).getDaysToRemind()));
+        if(tasks.get(groupPosition).isRemind()) {
+            ( (TableRow) convertView.findViewById(R.id.secretRow)).setVisibility(View.VISIBLE);
+            viewHolder.days.setText(String.valueOf(tasks.get(groupPosition).getDaysToRemind()));
+        }
         return convertView;
     }
 
@@ -118,6 +125,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
         TextView comment;
         TextView date;
         TextView days;
+        TextView recur;
 
     }
 }

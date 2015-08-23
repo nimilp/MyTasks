@@ -12,6 +12,7 @@ public class TaskBO {
     private String date;
     private boolean remind;
     private int daysToRemind;
+    private boolean recur;
 
 
     public int getId() {
@@ -68,5 +69,13 @@ public class TaskBO {
 
     public void setDaysToRemind(int daysToRemind) {
         this.daysToRemind = daysToRemind;
+    }
+
+    public boolean isRecur() {
+        return recur;
+    }
+
+    public void setRecur(boolean recur) {
+        this.recur = recur;
     }
 }

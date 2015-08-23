@@ -42,6 +42,12 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/recurring"
+        android:id="@+id/recurringCb" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/task_remind_days"
         android:id="@+id/remindCb" />
 
@@ -49,5 +55,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/days"
-        android:layout_gravity="right" />
+        android:layout_gravity="right"
+        android:visibility="gone" />
 </LinearLayout>

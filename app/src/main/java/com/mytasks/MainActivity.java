@@ -52,7 +52,11 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(v.getContext(),AddTask.class));
+                Intent intent = new Intent(v.getContext(), AddTask.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("DAO",dao);
+//                intent.putExtra("BUNDLE",bundle);
+                startActivity(intent);
             }
         });
     }

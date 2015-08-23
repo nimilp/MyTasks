@@ -6,8 +6,20 @@
     <string name="task_desc">Description</string>
     <string name="task_cmt">Comment</string>
     <string name="task_remind">Reminder Date</string>
-    <string name="task_remind_days">Days to remind</string>
+    <string name="task_remind_days">Remind me in</string>
     <string name="no_tasks">No Tasks!</string>
     <string name="task_name">Task Name</string>
     <string name="title_activity_add_task">Add New Task</string>
+    <string name="save">Save</string>
+    <string name="task_name_required">Task Name required</string>
+    <string name="recurring">Recurring Task</string>
+    <string-array name="noOfDays">
+        <item>1 day</item>
+        <item>2 days</item>
+        <item>3 days</item>
+        <item>4 days</item>
+        <item>5 days</item>
+        <item>6 days</item>
+
+    </string-array>
 </resources>
