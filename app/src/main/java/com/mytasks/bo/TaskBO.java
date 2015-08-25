@@ -12,7 +12,7 @@ import java.util.Date;
 public class TaskBO {
 
     private SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-    private int id;
+    private long id;
     private String name;
     private String desc;
     private String comments;
@@ -22,11 +22,11 @@ public class TaskBO {
     private boolean recur;
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

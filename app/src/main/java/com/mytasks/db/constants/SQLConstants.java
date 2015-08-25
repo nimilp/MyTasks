@@ -30,6 +30,7 @@ public class SQLConstants {
                 COLUMNS[7] + " INTEGER," +
                 COLUMNS[8] + " TEXT" +
                 ")";
-
+        public static String FILTER_BY_ID = " task_id=?";
     }
+
 }

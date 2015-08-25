@@ -24,6 +24,14 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
+        <activity
+            android:name=".ModifyTask"
+            android:label="@string/title_activity_modify_task"
+            android:parentActivityName=".MainActivity">
+
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
 
         <receiver
             android:name=".MyTasksReceiver"

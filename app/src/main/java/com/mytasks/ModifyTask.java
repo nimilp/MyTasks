@@ -2,10 +2,10 @@ package com.mytasks;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -17,12 +17,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.mytasks.R;
 import com.mytasks.bo.TaskBO;
+import com.mytasks.constatns.MyTaskConstants;
 import com.mytasks.db.TaskHDAO;
 
 import java.util.Calendar;
 
-public class AddTask extends AppCompatActivity {
+public class ModifyTask extends AppCompatActivity {
 
     private DatePickerListener datePickerCallBack = new DatePickerListener();
     private Calendar calendar = Calendar.getInstance();
@@ -32,18 +34,23 @@ public class AddTask extends AppCompatActivity {
     private CheckBox recurBb;
     private EditText name;
     private EditText desc;
+    private EditText id;
     private EditText comment;
     private TaskHDAO dao;
+    private FloatingActionButton fab;
 
     //public AddTask(){}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(dao==null){
+        if (dao == null) {
             dao = new TaskHDAO(this);
         }
-        setContentView(R.layout.add_task);
+
+
+        setContentView(R.layout.modify_task);
+        id = (EditText) findViewById(R.id.taskId);
         name = (EditText) findViewById(R.id.taskName);
         desc = (EditText) findViewById(R.id.taskDesc);
         comment = (EditText) findViewById(R.id.taskCmt);
@@ -53,7 +60,7 @@ public class AddTask extends AppCompatActivity {
         //taskDate.so(false);
         final int currYear = calendar.get(Calendar.YEAR);
         final int currDate = calendar.get(Calendar.DAY_OF_MONTH);
-        final int currMonth =calendar.get(Calendar.MONTH);
+        final int currMonth = calendar.get(Calendar.MONTH);
 
         //logic that brings up the date picker.
         taskDate.setOnTouchListener(new View.OnTouchListener() {
@@ -61,21 +68,21 @@ public class AddTask extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 //invoked only for down
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(v.getContext(), datePickerCallBack, currYear, currMonth, currDate){
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(v.getContext(), datePickerCallBack, currYear, currMonth, currDate) {
                         @Override
                         public void onDateChanged(DatePicker view, int year, int month, int day) {
 
                             //force set to current day
-                            if(year<calendar.get(Calendar.YEAR)){
-                                view.updateDate(currYear,currMonth,currDate);
+                            if (year < calendar.get(Calendar.YEAR)) {
+                                view.updateDate(currYear, currMonth, currDate);
                             }
-                            if(month<currMonth && year == currYear){
-                                view.updateDate(currYear,currMonth,currDate);
+                            if (month < currMonth && year == currYear) {
+                                view.updateDate(currYear, currMonth, currDate);
                             }
-                            if(day<currDate && currMonth==month && year==currYear){
-                                view.updateDate(currYear,currMonth,currDate);
+                            if (day < currDate && currMonth == month && year == currYear) {
+                                view.updateDate(currYear, currMonth, currDate);
                             }
-                           // return view;
+                            // return view;
                         }
                     };
                     datePickerDialog.show();
@@ -99,6 +106,37 @@ public class AddTask extends AppCompatActivity {
         //spinner
         daySpinner = (Spinner) findViewById(R.id.days);
         daySpinner.setAdapter(new ArrayAdapter<String>(this, android.support.v7.appcompat.R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.noOfDays)));
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long taskId = Long.valueOf(String.valueOf(id.getText()));
+                dao.deleteTask(taskId);
+                
+                setResult(Activity.RESULT_OK);
+            }
+        });
+        //set values
+        long taskId = getIntent().getLongExtra(MyTaskConstants.TASK_ID, -1);
+        TaskBO task = dao.getTask(taskId);
+        setTask(task);
+    }
+
+    /**
+     * sets the values
+     */
+    private void setTask(TaskBO task) {
+        id.setText(String.valueOf(task.getId()));
+        name.setText(task.getName());
+        desc.setText(task.getDesc());
+        comment.setText(task.getComments());
+        taskDate.setText(task.getDate());
+        remindMein.setChecked(task.isRemind());
+        recurBb.setChecked(task.isRecur());
+        if (task.isRemind()) {
+            daySpinner.setSelection(task.getDaysToRemind());
+        }
     }
 
     @Override
@@ -120,9 +158,9 @@ public class AddTask extends AppCompatActivity {
             return true;
         }
         if (id == R.id.save) {
-           boolean retVal = validate();
-            if(!retVal) {
-                insertTask();
+            boolean retVal = validate();
+            if (!retVal) {
+                updateTask();
                 setResult(Activity.RESULT_OK);
                 finish();
             }
@@ -137,11 +175,11 @@ public class AddTask extends AppCompatActivity {
 
         if (name.getText() == null || String.valueOf(name.getText()).trim().length() == 0) {
             name.setError(getResources().getString(R.string.task_name_required));
-            hasError=true;
+            hasError = true;
         }
-        if(taskDate.getText()==null || String.valueOf(taskDate.getText()).trim().length()==0){
+        if (taskDate.getText() == null || String.valueOf(taskDate.getText()).trim().length() == 0) {
             taskDate.setError(getResources().getString(R.string.taskdate_required));
-            hasError =true;
+            hasError = true;
         }
 
         return hasError;
@@ -151,12 +189,13 @@ public class AddTask extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-            taskDate.setText( (monthOfYear + 1) + "/" + dayOfMonth+"/"+year);
+            taskDate.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
         }
     }
 
-    private void insertTask(){
+    private void updateTask() {
         TaskBO taskBO = new TaskBO();
+        taskBO.setId(Long.valueOf(String.valueOf(id.getText())));
         taskBO.setName(String.valueOf(name.getText()));
         taskBO.setDesc(String.valueOf(desc.getText()));
         taskBO.setComments(String.valueOf(comment.getText()));
@@ -164,8 +203,8 @@ public class AddTask extends AppCompatActivity {
         taskBO.setRemind(remindMein.isChecked());
         taskBO.setRecur(recurBb.isChecked());
         taskBO.setDaysToRemind(daySpinner.getSelectedItemPosition());
-        dao.insertTask(taskBO);
-
+        dao.updateTask(taskBO);
+        setResult(Activity.RESULT_OK);
 
     }
 
@@ -173,4 +212,6 @@ public class AddTask extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    //on
 }

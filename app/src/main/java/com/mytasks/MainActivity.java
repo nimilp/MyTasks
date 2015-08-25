@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.mytasks.adapters.TaskListAdapter;
 import com.mytasks.bo.TaskBO;
+import com.mytasks.constatns.MyTaskConstants;
 import com.mytasks.db.TaskHDAO;
 import com.mytasks.implementation.RefreshList;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private List<TaskBO> tasks;
     private TaskListAdapter listViewAdapter;
     private int previous = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,24 +38,35 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_launcher);
 
         listView = (ExpandableListView) findViewById(R.id.taskList);
-        if(dao == null){
+        if (dao == null) {
             dao = new TaskHDAO(getApplicationContext());
         }
         tasks = dao.getTasks();
-        if(tasks!=null && !tasks.isEmpty()) {
-            listViewAdapter = new TaskListAdapter(this,tasks);
+        if (tasks != null && !tasks.isEmpty()) {
+            listViewAdapter = new TaskListAdapter(this, tasks);
             listView.setAdapter(listViewAdapter);
             listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
                 @Override
                 public void onGroupExpand(int groupPosition) {
-                    if(previous!=-1 && groupPosition!=previous){
+                    if (previous != -1 && groupPosition != previous) {
                         listView.collapseGroup(previous);
                     }
                     previous = groupPosition;
                 }
             });
-        }else{
-            Toast.makeText(this,R.string.no_tasks,Toast.LENGTH_SHORT).show();
+            listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                    Intent intent = new Intent(v.getContext(), ModifyTask.class);
+                    TaskBO taskBO = (TaskBO) ((TaskListAdapter) parent.getExpandableListAdapter()).getGroup(groupPosition);
+                    intent.putExtra(MyTaskConstants.TASK_ID, id);
+                    startActivityForResult(intent, MyTaskConstants.UPDATE_REQUEST);
+                    return true;
+                }
+            });
+        } else {
+            Toast.makeText(this, R.string.no_tasks, Toast.LENGTH_SHORT).show();
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -61,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), AddTask.class);
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, MyTaskConstants.INSERT_REQUEST);
             }
         });
 
@@ -90,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class Refresh implements RefreshList{
+    private class Refresh implements RefreshList {
         @Override
         public void refresh() {
 
@@ -98,14 +111,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void startMyBroadCast(){
+    private void startMyBroadCast() {
         long now = System.currentTimeMillis();
-        long time = 500;
+        long time = 1000 * 60 * 60;
         Intent myIntent = new Intent("com.mytasks.PENDING_INTENT");
-        myIntent.setClass(this,MyTasksReceiver.class);
+        myIntent.setClass(this, MyTasksReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC, now + time, time, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, now, time, pendingIntent);
 //this.reg
     }
 
@@ -114,8 +127,21 @@ public class MainActivity extends AppCompatActivity {
         //super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK){
 //            listView.
-           listViewAdapter.setTasks(dao.getTasks());
-            Toast.makeText(this,R.string.task_inserted_successfully,Toast.LENGTH_SHORT).show();
+            switch (requestCode) {
+                case 1:
+                    listViewAdapter.setTasks(dao.getTasks());
+                    Toast.makeText(this, R.string.task_inserted_successfully, Toast.LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    listViewAdapter.setTasks(dao.getTasks());
+                    Toast.makeText(this, R.string.task_updated_successfully, Toast.LENGTH_SHORT).show();
+                    break;
+                case 3:
+                    listViewAdapter.setTasks(dao.getTasks());
+                    Toast.makeText(this, R.string.task_deleted_successfully, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
         }
     }
 }

@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckBox;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -107,12 +106,13 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
             ( (TableRow) convertView.findViewById(R.id.secretRow)).setVisibility(View.VISIBLE);
             viewHolder.days.setText(context.getResources().getStringArray(R.array.noOfDays)[tasks.get(groupPosition).getDaysToRemind()]);
         }
+
         return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 
     private class ViewHolder{

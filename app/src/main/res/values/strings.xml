@@ -26,4 +26,7 @@
     <string name="taskdate_required">Task Reminder Date required</string>
     <string name="task_inserted_successfully">Task created successfully!</string>
     <string name="task_due_message">Task {0} is due in {1} day(s)</string>
+    <string name="title_activity_modify_task">Modify Task</string>
+    <string name="task_updated_successfully">Task updated successfully</string>
+    <string name="task_deleted_successfully">Task deleted successfully</string>
 </resources>
