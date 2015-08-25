@@ -60,10 +60,10 @@ public class TaskBO {
 
     public Date getDateVal(){
         try {
-            Log.d("any",date.toString()+"-"+name+"-"+format.parse(date));
+           // Log.d("any",date.toString()+"-"+name+"-"+format.parse(date));
             return format.parse(date);
         }catch(ParseException e){
-            e.printStackTrace();
+           Log.e("TaskBO",e.getMessage());
         }
         return null;
     }

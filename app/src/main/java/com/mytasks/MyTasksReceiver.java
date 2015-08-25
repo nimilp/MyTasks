@@ -7,7 +7,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.util.TimeUtils;
 import android.util.Log;
 
@@ -15,6 +17,7 @@ import com.mytasks.bo.TaskBO;
 import com.mytasks.db.TaskHDAO;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,25 +38,26 @@ public class MyTasksReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        calendar.set(Calendar.HOUR,0);
-        calendar.set(Calendar.MINUTE,0);
-        calendar.set(Calendar.HOUR,0);
-        calendar.set(Calendar.SECOND,0);
-        calendar.set(Calendar.MILLISECOND,0);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         dao = new TaskHDAO(context);
+        NotificationCompat.Builder not = null;
+        ArrayList<String> builder = null;
         List<TaskBO> tasks = dao.getTasks();
+        int counter = 0;
         if (tasks != null && tasks.size() > 0) {
             for (TaskBO taskBO : tasks) {
 
                 if (name == null) {
-                    Log.d(myName, "App name is empty");
                     name = context.getResources().getString(R.string.app_name);
                 }
 
                 int dateDiff = 0;
-                if(taskBO.getDateVal()!=null) {
-                    Log.d(myName,taskBO.getDateVal()+" - "+taskBO.getName());
-                    Log.d(myName,calendar.getTime().toString());
+                if (taskBO.getDateVal() != null) {
+                    ++counter;
 
                     if (calendar.before(taskBO.getDateVal())) {
                         dateDiff = (int) ((calendar.getTimeInMillis() - taskBO.getDateVal().getTime()) / MIILISECONDS_IN_A_DAY);
@@ -63,30 +67,53 @@ public class MyTasksReceiver extends BroadcastReceiver {
 
 
                     if (taskBO.isRemind()) {
-                        NotificationCompat.Builder not = new NotificationCompat.Builder(context)
-                                .setContentText(taskBO.getDesc())
-                                .setContentTitle(taskBO.getName())
-                                .setSmallIcon(R.mipmap.ic_action_mt)
-                                .setGroup(GROUP)
-                                .setGroupSummary(true);
-
-                        if (taskBO.getDaysToRemind() >= dateDiff) {
-
-                            not.setCategory(Notification.CATEGORY_ALARM)
-                            .setSubText(MessageFormat.format(context.getResources().getString(R.string.task_due_message),taskBO.getName(),dateDiff));
-                        } else {
-
-                            not.setCategory(Notification.CATEGORY_ERROR)
-                                    .setSubText(MessageFormat.format(context.getResources().getString(R.string.task_overdue), taskBO.getName(), dateDiff))
+                        if (builder == null) {
+                            Log.d(myName, "initializing the notification builder");
+                            builder = new ArrayList<>(tasks.size());
                             ;
 
                         }
+//                         =
+//                                .setContentText("Hello")
+//                                .setContentTitle("Hai")
+//                                .setSmallIcon(R.mipmap.ic_action_mt)
+//                                ;
 
-                        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                        manager.notify(taskBO.getId(), not.build());
+                        if (taskBO.getDaysToRemind() >= dateDiff) {
+
+                            builder.add(MessageFormat.format(context.getResources().getString(R.string.task_due_message), taskBO.getName(), dateDiff));
+                        } else {
+
+                            builder.add(MessageFormat.format(context.getResources().getString(R.string.task_overdue), taskBO.getName(), dateDiff));
+                        }
+
+
                     }
                 }
             }
+        }
+        Log.d(myName, builder.toString());
+        if (builder != null) {
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            for (String s : builder) {
+                inboxStyle.addLine(s);
+            }
+            inboxStyle.setBigContentTitle(name)
+                    .setSummaryText(counter + " pending tasks");
+            not = new NotificationCompat.Builder(context)
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                    .setGroup(GROUP)
+                    .setGroupSummary(true)
+                    .setContentTitle(name)
+                    .setContentText("Pending Tasks")
+                    .setStyle(inboxStyle)
+                    .setNumber(counter)
+                    .setCategory(Notification.CATEGORY_EVENT)
+                    .setSmallIcon(R.mipmap.ic_action_mt);
+
+            NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+            Notification notificationCompat = not.build();
+            manager.notify(1, notificationCompat);
         }
     }
 
