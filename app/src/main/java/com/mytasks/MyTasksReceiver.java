@@ -33,11 +33,13 @@ public class MyTasksReceiver extends BroadcastReceiver {
     private long MIILISECONDS_IN_A_DAY = (1000 * 60 * 60 * 24);
 
     public MyTasksReceiver() {
+        Log.i(myName,"Task receiver invoked by constructor");
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        Log.i(myName, "invoking the receiver");
         calendar.set(Calendar.HOUR, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.HOUR, 0);
@@ -73,11 +75,6 @@ public class MyTasksReceiver extends BroadcastReceiver {
                             ;
 
                         }
-//                         =
-//                                .setContentText("Hello")
-//                                .setContentTitle("Hai")
-//                                .setSmallIcon(R.mipmap.ic_action_mt)
-//                                ;
 
                         if (taskBO.getDaysToRemind() >= dateDiff) {
 
@@ -99,13 +96,13 @@ public class MyTasksReceiver extends BroadcastReceiver {
                 inboxStyle.addLine(s);
             }
             inboxStyle.setBigContentTitle(name)
-                    .setSummaryText(counter + " pending tasks");
+                    .setSummaryText(MessageFormat.format(context.getResources().getString(R.string.pending_tasks_with_counter),counter ));
             not = new NotificationCompat.Builder(context)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                     .setGroup(GROUP)
                     .setGroupSummary(true)
                     .setContentTitle(name)
-                    .setContentText("Pending Tasks")
+                    .setContentText(context.getResources().getString(R.string.pending_tasks))
                     .setStyle(inboxStyle)
                     .setNumber(counter)
                     .setCategory(Notification.CATEGORY_EVENT)

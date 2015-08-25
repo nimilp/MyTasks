@@ -103,45 +103,49 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class Refresh implements RefreshList {
-        @Override
-        public void refresh() {
-
-//            listView.getAdapter().n
-        }
-    }
 
     private void startMyBroadCast() {
         long now = System.currentTimeMillis();
-        long time = 1000 * 60 * 60;
-        Intent myIntent = new Intent("com.mytasks.PENDING_INTENT");
+        long time = 500;
+        Intent myIntent = new Intent(MyTaskConstants.PENDING_INTENT_NAME);
         myIntent.setClass(this, MyTasksReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, now, time, pendingIntent);
-//this.reg
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK){
-//            listView.
-            switch (requestCode) {
-                case 1:
-                    listViewAdapter.setTasks(dao.getTasks());
+
+            switch (resultCode) {
+                case MyTaskConstants.INSERT_SUCCESSFUL_RESULT:
+
+                    tasks = dao.getTasks();
+                    /*
+                    initial insertion listViewAdapter will be null.
+                    initialize it and set to listview
+                     */
+                    if (listViewAdapter == null) {
+
+                        listViewAdapter = new TaskListAdapter(this, tasks);
+                        listView.setAdapter(listViewAdapter);
+                    }else{
+                        listViewAdapter.setTasks(tasks);
+                    }
+
                     Toast.makeText(this, R.string.task_inserted_successfully, Toast.LENGTH_SHORT).show();
                     break;
-                case 2:
+                case MyTaskConstants.UPDATE_SUCCESSFUL_RESULT:
                     listViewAdapter.setTasks(dao.getTasks());
                     Toast.makeText(this, R.string.task_updated_successfully, Toast.LENGTH_SHORT).show();
                     break;
-                case 3:
+                case MyTaskConstants.DELETE_SUCCESSFUL_RESULT:
                     listViewAdapter.setTasks(dao.getTasks());
                     Toast.makeText(this, R.string.task_deleted_successfully, Toast.LENGTH_SHORT).show();
                     break;
+                default:
+                    super.onActivityResult(requestCode,resultCode,data);
             }
 
-        }
     }
 }

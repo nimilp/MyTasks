@@ -29,4 +29,6 @@
     <string name="title_activity_modify_task">Modify Task</string>
     <string name="task_updated_successfully">Task updated successfully</string>
     <string name="task_deleted_successfully">Task deleted successfully</string>
+    <string name="pending_tasks_with_counter">{0} pending task(s)</string>
+    <string name="pending_tasks">Pending Tasks</string>
 </resources>

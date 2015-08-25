@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.mytasks.bo.TaskBO;
+import com.mytasks.constatns.MyTaskConstants;
 import com.mytasks.db.TaskHDAO;
 
 import java.util.Calendar;
@@ -123,7 +124,7 @@ public class AddTask extends AppCompatActivity {
            boolean retVal = validate();
             if(!retVal) {
                 insertTask();
-                setResult(Activity.RESULT_OK);
+                setResult(MyTaskConstants.INSERT_SUCCESSFUL_RESULT);
                 finish();
             }
             return retVal;

@@ -113,8 +113,9 @@ public class ModifyTask extends AppCompatActivity {
             public void onClick(View v) {
                 long taskId = Long.valueOf(String.valueOf(id.getText()));
                 dao.deleteTask(taskId);
-                
-                setResult(Activity.RESULT_OK);
+
+                setResult(MyTaskConstants.DELETE_SUCCESSFUL_RESULT);
+                finish();
             }
         });
         //set values
@@ -161,7 +162,7 @@ public class ModifyTask extends AppCompatActivity {
             boolean retVal = validate();
             if (!retVal) {
                 updateTask();
-                setResult(Activity.RESULT_OK);
+                setResult(MyTaskConstants.UPDATE_SUCCESSFUL_RESULT);
                 finish();
             }
             return retVal;
