@@ -1,10 +1,15 @@
 package com.mytasks.bo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by nimilpeethambaran on 8/21/15.
  */
 public class TaskBO {
 
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
     private int id;
     private String name;
     private String desc;
@@ -49,6 +54,15 @@ public class TaskBO {
 
     public String getDate() {
         return date;
+    }
+
+    public Date getDateVal(){
+        try {
+            return format.parse(date);
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void setDate(String date) {

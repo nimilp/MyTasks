@@ -105,7 +105,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
         viewHolder.date.setText(tasks.get(groupPosition).getDate());
         if(tasks.get(groupPosition).isRemind()) {
             ( (TableRow) convertView.findViewById(R.id.secretRow)).setVisibility(View.VISIBLE);
-            viewHolder.days.setText(String.valueOf(tasks.get(groupPosition).getDaysToRemind()));
+            viewHolder.days.setText(context.getResources().getStringArray(R.array.noOfDays)[tasks.get(groupPosition).getDaysToRemind()]);
         }
         return convertView;
     }

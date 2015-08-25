@@ -33,9 +33,9 @@ public class TaskHDAO implements Serializable{
         ArrayList<TaskBO> taskList = null;
         Cursor query = dbHelper.getReadableDatabase().query(TASK.TABLE_NAME, TASK.COLUMNS, null, null, null, null, null);
         if (query != null && query.getCount() > 0) {
-            query.moveToFirst();
+            //query.moveToFirst();
             taskList = new ArrayList<>(query.getCount());
-            for (int i = 1; i <= query.getCount(); i++) {
+            while(query.moveToNext()) {
                 TaskBO task = new TaskBO();
                 task.setId(query.getInt(0));
                 task.setName(query.getString(1));

@@ -18,8 +18,23 @@
         </activity>
         <activity
             android:name=".AddTask"
-            android:label="@string/title_activity_add_task" >
-        </activity>
-    </application>
+            android:label="@string/title_activity_add_task"
+            android:parentActivityName=".MainActivity">
 
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <receiver
+            android:name=".MyTasksReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.mystaks.PENDING_INTENT"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+    </application>
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 </manifest>

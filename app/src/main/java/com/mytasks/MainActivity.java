@@ -1,5 +1,8 @@
 package com.mytasks;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import com.mytasks.adapters.TaskListAdapter;
 import com.mytasks.bo.TaskBO;
 import com.mytasks.db.TaskHDAO;
+import com.mytasks.implementation.RefreshList;
 
 import java.util.List;
 
@@ -53,12 +57,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), AddTask.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("DAO",dao);
-//                intent.putExtra("BUNDLE",bundle);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
+
+        startMyBroadCast();
     }
 
     @Override
@@ -83,5 +86,27 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private class Refresh implements RefreshList{
+        @Override
+        public void refresh() {
 
+//            listView.getAdapter().n
+        }
+    }
+
+    private void startMyBroadCast(){
+        long now = System.currentTimeMillis();
+        long time = 500;
+        Intent myIntent = new Intent("com.mytasks.PENDING_INTENT");
+        myIntent.setClass(this,MyTasksReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC, now + time, time, pendingIntent);
+//this.reg
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

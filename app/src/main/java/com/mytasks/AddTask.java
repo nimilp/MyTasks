@@ -1,5 +1,6 @@
 package com.mytasks;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -50,11 +51,28 @@ public class AddTask extends AppCompatActivity {
         taskDate = (EditText) findViewById(R.id.taskDate);
 
         //taskDate.so(false);
+        final int currYear = calendar.get(Calendar.YEAR);
+        final int currDate = calendar.get(Calendar.DAY_OF_MONTH);
+        final int currMonth =calendar.get(Calendar.MONTH);
         taskDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(v.getContext(), datePickerCallBack, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(v.getContext(), datePickerCallBack, currYear, currMonth, currDate){
+                        @Override
+                        public void onDateChanged(DatePicker view, int year, int month, int day) {
+                            if(year<calendar.get(Calendar.YEAR)){
+                                view.updateDate(currYear,currMonth,currDate);
+                            }
+                            if(month<currMonth && year == currYear){
+                                view.updateDate(currYear,currMonth,currDate);
+                            }
+                            if(day<currDate && currMonth==month && year==currYear){
+                                view.updateDate(currYear,currMonth,currDate);
+                            }
+                           // return view;
+                        }
+                    };
                     datePickerDialog.show();
                     return true;
                 }
@@ -99,7 +117,8 @@ public class AddTask extends AppCompatActivity {
         if (id == R.id.save) {
             validate();
             insertTask();
-            return false;
+            setResult(Activity.RESULT_OK);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -111,6 +130,9 @@ public class AddTask extends AppCompatActivity {
         if (name.getText() == null || String.valueOf(name.getText()).trim().length() == 0) {
             name.setError(getResources().getString(R.string.task_name_required));
         }
+        if(taskDate.getText()==null || String.valueOf(taskDate.getText()).trim().length()==0){
+            name.setError(getResources().getString(R.string.taskdate_required));
+        }
 
         return hasError;
     }
@@ -119,7 +141,7 @@ public class AddTask extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-            taskDate.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+            taskDate.setText( (monthOfYear + 1) + "/" + dayOfMonth+"/"+year);
         }
     }
 
@@ -135,5 +157,10 @@ public class AddTask extends AppCompatActivity {
         dao.insertTask(taskBO);
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

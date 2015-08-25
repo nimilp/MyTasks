@@ -6,7 +6,7 @@
     <string name="task_desc">Description</string>
     <string name="task_cmt">Comment</string>
     <string name="task_remind">Reminder Date</string>
-    <string name="task_remind_days">Remind me in</string>
+    <string name="task_remind_days">Remind me before</string>
     <string name="no_tasks">No Tasks!</string>
     <string name="task_name">Task Name</string>
     <string name="title_activity_add_task">Add New Task</string>
@@ -22,4 +22,6 @@
         <item>6 days</item>
 
     </string-array>
+    <string name="task_overdue">{0} is overdue by {1} day(s)</string>
+    <string name="taskdate_required">Task Reminder Date required</string>
 </resources>
