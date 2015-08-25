@@ -1,5 +1,7 @@
 package com.mytasks.bo;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,7 +11,7 @@ import java.util.Date;
  */
 public class TaskBO {
 
-    private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+    private SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
     private int id;
     private String name;
     private String desc;
@@ -58,6 +60,7 @@ public class TaskBO {
 
     public Date getDateVal(){
         try {
+            Log.d("any",date.toString()+"-"+name+"-"+format.parse(date));
             return format.parse(date);
         }catch(ParseException e){
             e.printStackTrace();

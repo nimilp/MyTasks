@@ -1,5 +1,6 @@
 package com.mytasks;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ExpandableListView listView;
     private TaskHDAO dao;
     private List<TaskBO> tasks;
+    private TaskListAdapter listViewAdapter;
     private int previous = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         }
         tasks = dao.getTasks();
         if(tasks!=null && !tasks.isEmpty()) {
-            listView.setAdapter(new TaskListAdapter(this,tasks));
+            listViewAdapter = new TaskListAdapter(this,tasks);
+            listView.setAdapter(listViewAdapter);
             listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
                 @Override
                 public void onGroupExpand(int groupPosition) {
@@ -107,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        //super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK){
+//            listView.
+           listViewAdapter.setTasks(dao.getTasks());
+            Toast.makeText(this,R.string.task_inserted_successfully,Toast.LENGTH_SHORT).show();
+        }
     }
 }

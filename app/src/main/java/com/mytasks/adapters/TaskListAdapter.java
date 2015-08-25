@@ -128,4 +128,12 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
         TextView recur;
 
     }
+
+
+
+
+    public void setTasks(List<TaskBO> tasks){
+        this.tasks = tasks;
+        notifyDataSetChanged();
+    }
 }

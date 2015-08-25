@@ -35,6 +35,11 @@ public class MyTasksReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        calendar.set(Calendar.HOUR,0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.HOUR,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
         dao = new TaskHDAO(context);
         List<TaskBO> tasks = dao.getTasks();
         if (tasks != null && tasks.size() > 0) {
@@ -47,7 +52,10 @@ public class MyTasksReceiver extends BroadcastReceiver {
 
                 int dateDiff = 0;
                 if(taskBO.getDateVal()!=null) {
-                    if (calendar.after(taskBO.getDateVal())) {
+                    Log.d(myName,taskBO.getDateVal()+" - "+taskBO.getName());
+                    Log.d(myName,calendar.getTime().toString());
+
+                    if (calendar.before(taskBO.getDateVal())) {
                         dateDiff = (int) ((calendar.getTimeInMillis() - taskBO.getDateVal().getTime()) / MIILISECONDS_IN_A_DAY);
                     } else {
                         dateDiff = (int) ((taskBO.getDateVal().getTime() - calendar.getTimeInMillis()) / MIILISECONDS_IN_A_DAY);
@@ -64,7 +72,8 @@ public class MyTasksReceiver extends BroadcastReceiver {
 
                         if (taskBO.getDaysToRemind() >= dateDiff) {
 
-                            not.setCategory(Notification.CATEGORY_ALARM);
+                            not.setCategory(Notification.CATEGORY_ALARM)
+                            .setSubText(MessageFormat.format(context.getResources().getString(R.string.task_due_message),taskBO.getName(),dateDiff));
                         } else {
 
                             not.setCategory(Notification.CATEGORY_ERROR)

@@ -115,10 +115,13 @@ public class AddTask extends AppCompatActivity {
             return true;
         }
         if (id == R.id.save) {
-            validate();
-            insertTask();
-            setResult(Activity.RESULT_OK);
-            finish();
+           boolean retVal = validate();
+            if(!retVal) {
+                insertTask();
+                setResult(Activity.RESULT_OK);
+                finish();
+            }
+            return retVal;
         }
 
         return super.onOptionsItemSelected(item);
@@ -129,9 +132,11 @@ public class AddTask extends AppCompatActivity {
 
         if (name.getText() == null || String.valueOf(name.getText()).trim().length() == 0) {
             name.setError(getResources().getString(R.string.task_name_required));
+            hasError=true;
         }
         if(taskDate.getText()==null || String.valueOf(taskDate.getText()).trim().length()==0){
-            name.setError(getResources().getString(R.string.taskdate_required));
+            taskDate.setError(getResources().getString(R.string.taskdate_required));
+            hasError =true;
         }
 
         return hasError;
