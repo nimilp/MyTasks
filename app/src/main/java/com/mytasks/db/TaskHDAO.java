@@ -43,9 +43,10 @@ public class TaskHDAO implements Serializable {
                 task.setDesc(query.getString(2));
                 task.setComments(query.getString(3));
                 task.setDate(query.getString(4));
-                task.setRemind(query.getInt(5) == 0);
-                task.setRecur(query.getInt(6) == 0);
+                task.setRecur(query.getInt(5) == 0);
+                task.setRemind(query.getInt(6) == 0);
                 task.setDaysToRemind(query.getInt(7));
+                task.setLastChangedDate(query.getString(8));
 
                 taskList.add(task);
             }
@@ -69,9 +70,10 @@ public class TaskHDAO implements Serializable {
                 task.setDesc(query.getString(2));
                 task.setComments(query.getString(3));
                 task.setDate(query.getString(4));
-                task.setRemind(query.getInt(5) == 0);
-                task.setRecur(query.getInt(6) == 0);
+                task.setRecur(query.getInt(5) == 0);
+                task.setRemind(query.getInt(6) == 0);
                 task.setDaysToRemind(query.getInt(7));
+                task.setLastChangedDate(query.getString(8));
 
             }
             dbHelper.close();
@@ -95,6 +97,7 @@ public class TaskHDAO implements Serializable {
         values.put(TASK.COLUMNS[5], task.isRecur() ? 0 : 1);
         values.put(TASK.COLUMNS[6], task.isRemind() ? 0 : 1);
         values.put(TASK.COLUMNS[7], task.getDaysToRemind());
+        values.put(TASK.COLUMNS[8],task.getLastChangedDate());
         db.insert(TASK.TABLE_NAME, null, values);
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -119,6 +122,7 @@ public class TaskHDAO implements Serializable {
         values.put(TASK.COLUMNS[5], task.isRecur() ? 0 : 1);
         values.put(TASK.COLUMNS[6], task.isRemind() ? 0 : 1);
         values.put(TASK.COLUMNS[7], task.getDaysToRemind());
+        values.put(TASK.COLUMNS[8],task.getLastChangedDate());
         db.update(TASK.TABLE_NAME, values, TASK.FILTER_BY_ID, selection);
         db.setTransactionSuccessful();
         db.endTransaction();

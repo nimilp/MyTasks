@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //invoke the broadcast
         startMyBroadCast();
     }
 
@@ -104,14 +105,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Method that invokes the broadcast
+     */
     private void startMyBroadCast() {
         long now = System.currentTimeMillis();
-        long time = 500;
+        long time = 1000;
         Intent myIntent = new Intent(MyTaskConstants.PENDING_INTENT_NAME);
         myIntent.setClass(this, MyTasksReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, now, time, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_FIFTEEN_MINUTES, time, pendingIntent);
     }
 
     @Override
@@ -143,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
                     listViewAdapter.setTasks(dao.getTasks());
                     Toast.makeText(this, R.string.task_deleted_successfully, Toast.LENGTH_SHORT).show();
                     break;
-                default:
-                    super.onActivityResult(requestCode,resultCode,data);
+//                default:
+//                    super.onActivityResult(requestCode,resultCode,data);
             }
 
     }

@@ -2,33 +2,43 @@ package com.mytasks;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
-import com.mytasks.R;
 import com.mytasks.bo.TaskBO;
 import com.mytasks.constatns.MyTaskConstants;
 import com.mytasks.db.TaskHDAO;
+import com.mytasks.utils.DateUtils;
 
+import java.text.MessageFormat;
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ModifyTask extends AppCompatActivity {
 
     private DatePickerListener datePickerCallBack = new DatePickerListener();
     private Calendar calendar = Calendar.getInstance();
-    private EditText taskDate;
+    private Button taskDate;
     private Spinner daySpinner;
     private CheckBox remindMein;
     private CheckBox recurBb;
@@ -55,7 +65,7 @@ public class ModifyTask extends AppCompatActivity {
         desc = (EditText) findViewById(R.id.taskDesc);
         comment = (EditText) findViewById(R.id.taskCmt);
         recurBb = (CheckBox) findViewById(R.id.recurringCb);
-        taskDate = (EditText) findViewById(R.id.taskDate);
+        taskDate = (Button) findViewById(R.id.taskDate);
 
         //taskDate.so(false);
         final int currYear = calendar.get(Calendar.YEAR);
@@ -63,11 +73,12 @@ public class ModifyTask extends AppCompatActivity {
         final int currMonth = calendar.get(Calendar.MONTH);
 
         //logic that brings up the date picker.
-        taskDate.setOnTouchListener(new View.OnTouchListener() {
+        taskDate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
+
                 //invoked only for down
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+              //  if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     DatePickerDialog datePickerDialog = new DatePickerDialog(v.getContext(), datePickerCallBack, currYear, currMonth, currDate) {
                         @Override
                         public void onDateChanged(DatePicker view, int year, int month, int day) {
@@ -86,9 +97,9 @@ public class ModifyTask extends AppCompatActivity {
                         }
                     };
                     datePickerDialog.show();
-                    return true;
-                }
-                return false;
+                    //return true;
+                //}
+                //return false;
             }
         });
 
@@ -183,6 +194,34 @@ public class ModifyTask extends AppCompatActivity {
             hasError = true;
         }
 
+        try{
+        if(recurBb.isChecked() && DateUtils.getDate(String.valueOf(taskDate.getText())).before(calendar.getTime())){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            Date date = DateUtils.getDate(String.valueOf(taskDate.getText()));
+            final Calendar cal = Calendar.getInstance();
+            cal.setTime(date);;
+            cal.roll(Calendar.MONTH,1);
+            builder.setTitle(getResources().getString(R.string.expired_warning_title));
+            builder.setMessage(MessageFormat.format(getResources().getString(R.string.expired_message),DateUtils.parseDate(cal.getTime())));
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                        taskDate.setText(DateUtils.parseDate(cal.getTime()));
+                }
+            });
+            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    taskDate.setError(getResources().getString(R.string.expired_date));
+                    dialog.cancel();
+                }
+            });
+            builder.create().show();
+            hasError = true;
+        }}catch (ParseException e){
+            Log.e("ModifyTask", e.getMessage());
+        }
         return hasError;
     }
 

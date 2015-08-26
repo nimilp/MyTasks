@@ -31,4 +31,9 @@
     <string name="task_deleted_successfully">Task deleted successfully</string>
     <string name="pending_tasks_with_counter">{0} pending task(s)</string>
     <string name="pending_tasks">Pending Tasks</string>
+    <string name="expired_warning_title">Task Expired</string>
+    <string name="expired_message">Do you want to expire the task and create a new one for {0}?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="expired_date">Task expired. Please change date to future or remove recurrance.</string>
 </resources>

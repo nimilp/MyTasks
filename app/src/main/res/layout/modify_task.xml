@@ -43,13 +43,12 @@
         android:id="@+id/taskCmt"
         android:hint="@string/task_cmt"/>
 
-    <EditText
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
         android:hint="@string/task_remind"
-        android:id="@+id/taskDate" />
+        android:id="@+id/taskDate"
+        style="?android:attr/editTextStyle"/>
 
     <CheckBox
         android:layout_width="wrap_content"

@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class TaskBO {
 
-    private SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+
     private long id;
     private String name;
     private String desc;
@@ -20,6 +20,7 @@ public class TaskBO {
     private boolean remind;
     private int daysToRemind;
     private boolean recur;
+    private String lastChangedDate;
 
 
     public long getId() {
@@ -58,16 +59,6 @@ public class TaskBO {
         return date;
     }
 
-    public Date getDateVal(){
-        try {
-           // Log.d("any",date.toString()+"-"+name+"-"+format.parse(date));
-            return format.parse(date);
-        }catch(ParseException e){
-           Log.e("TaskBO",e.getMessage());
-        }
-        return null;
-    }
-
     public void setDate(String date) {
         this.date = date;
     }
@@ -94,5 +85,14 @@ public class TaskBO {
 
     public void setRecur(boolean recur) {
         this.recur = recur;
+    }
+
+    public void setLastChangedDate(String date){
+        this.lastChangedDate = date;
+    }
+
+    public String getLastChangedDate(){
+
+       return lastChangedDate;
     }
 }

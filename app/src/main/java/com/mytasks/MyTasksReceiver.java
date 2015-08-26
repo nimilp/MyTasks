@@ -15,8 +15,10 @@ import android.util.Log;
 
 import com.mytasks.bo.TaskBO;
 import com.mytasks.db.TaskHDAO;
+import com.mytasks.utils.DateUtils;
 
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +35,7 @@ public class MyTasksReceiver extends BroadcastReceiver {
     private long MIILISECONDS_IN_A_DAY = (1000 * 60 * 60 * 24);
 
     public MyTasksReceiver() {
-        Log.i(myName,"Task receiver invoked by constructor");
+       // Log.i(myName,"Task receiver invoked by constructor");
     }
 
     @Override
@@ -58,13 +60,15 @@ public class MyTasksReceiver extends BroadcastReceiver {
                 }
 
                 int dateDiff = 0;
-                if (taskBO.getDateVal() != null) {
+                try{
+                Date taskDate = DateUtils.getDate(taskBO.getDate());
+                if (taskDate != null) {
                     ++counter;
 
-                    if (calendar.before(taskBO.getDateVal())) {
-                        dateDiff = (int) ((calendar.getTimeInMillis() - taskBO.getDateVal().getTime()) / MIILISECONDS_IN_A_DAY);
+                    if (calendar.before(taskDate)) {
+                        dateDiff = (int) ((calendar.getTimeInMillis() - taskDate.getTime()) / MIILISECONDS_IN_A_DAY);
                     } else {
-                        dateDiff = (int) ((taskBO.getDateVal().getTime() - calendar.getTimeInMillis()) / MIILISECONDS_IN_A_DAY);
+                        dateDiff = (int) ((taskDate.getTime() - calendar.getTimeInMillis()) / MIILISECONDS_IN_A_DAY);
                     }
 
 
@@ -72,8 +76,6 @@ public class MyTasksReceiver extends BroadcastReceiver {
                         if (builder == null) {
                             Log.d(myName, "initializing the notification builder");
                             builder = new ArrayList<>(tasks.size());
-                            ;
-
                         }
 
                         if (taskBO.getDaysToRemind() >= dateDiff) {
@@ -86,10 +88,12 @@ public class MyTasksReceiver extends BroadcastReceiver {
 
 
                     }
+                }}catch (ParseException e){
+                    Log.e(myName,e.getMessage());
                 }
             }
         }
-        Log.d(myName, builder.toString());
+        //Log.d(myName, builder.toString());
         if (builder != null) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             for (String s : builder) {
