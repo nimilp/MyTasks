@@ -243,6 +243,7 @@ public class ModifyTask extends AppCompatActivity {
         taskBO.setRemind(remindMein.isChecked());
         taskBO.setRecur(recurBb.isChecked());
         taskBO.setDaysToRemind(daySpinner.getSelectedItemPosition());
+        taskBO.setLastChangedDate(DateUtils.parseDate(calendar.getTime()));
         dao.updateTask(taskBO);
         setResult(Activity.RESULT_OK);
 

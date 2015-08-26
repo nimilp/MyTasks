@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import com.mytasks.bo.TaskBO;
 import com.mytasks.constatns.MyTaskConstants;
 import com.mytasks.db.TaskHDAO;
+import com.mytasks.utils.DateUtils;
 
 import java.util.Calendar;
 
@@ -165,6 +166,7 @@ public class AddTask extends AppCompatActivity {
         taskBO.setRemind(remindMein.isChecked());
         taskBO.setRecur(recurBb.isChecked());
         taskBO.setDaysToRemind(daySpinner.getSelectedItemPosition());
+        taskBO.setLastChangedDate(DateUtils.parseDate(calendar.getTime()));
         dao.insertTask(taskBO);
 
 
