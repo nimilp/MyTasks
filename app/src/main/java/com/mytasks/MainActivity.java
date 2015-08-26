@@ -1,6 +1,5 @@
 package com.mytasks;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,15 +10,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.mytasks.adapters.TaskListAdapter;
 import com.mytasks.bo.TaskBO;
-import com.mytasks.constatns.MyTaskConstants;
+import com.mytasks.constants.MyTaskConstants;
 import com.mytasks.db.TaskHDAO;
-import com.mytasks.implementation.RefreshList;
 
 import java.util.List;
 
@@ -115,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         myIntent.setClass(this, MyTasksReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_FIFTEEN_MINUTES, time, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
     }
 
     @Override

@@ -1,8 +1,6 @@
 package com.mytasks;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.mytasks.bo.TaskBO;
-import com.mytasks.constatns.MyTaskConstants;
+import com.mytasks.constants.MyTaskConstants;
 import com.mytasks.db.TaskHDAO;
 import com.mytasks.utils.DateUtils;
 

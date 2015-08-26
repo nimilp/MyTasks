@@ -31,6 +31,7 @@ public class SQLConstants {
                 COLUMNS[8] + " TEXT" +
                 ")";
         public static String FILTER_BY_ID = " task_id=?";
+        public static String FILTER_REMIND = "remind_me=?";
     }
 
 }

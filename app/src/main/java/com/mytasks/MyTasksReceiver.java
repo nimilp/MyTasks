@@ -50,7 +50,7 @@ public class MyTasksReceiver extends BroadcastReceiver {
         dao = new TaskHDAO(context);
         NotificationCompat.Builder not = null;
         ArrayList<String> builder = null;
-        List<TaskBO> tasks = dao.getTasks();
+        List<TaskBO> tasks = dao.getTasksWithReminder();
         int counter = 0;
         if (tasks != null && tasks.size() > 0) {
             for (TaskBO taskBO : tasks) {
