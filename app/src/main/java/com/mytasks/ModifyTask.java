@@ -64,6 +64,7 @@ public class ModifyTask extends AppCompatActivity {
         taskDate = (Button) findViewById(R.id.taskDate);
 
         //taskDate.so(false);
+
         final int currYear = calendar.get(Calendar.YEAR);
         final int currDate = calendar.get(Calendar.DAY_OF_MONTH);
         final int currMonth = calendar.get(Calendar.MONTH);
@@ -221,6 +222,9 @@ public class ModifyTask extends AppCompatActivity {
         return hasError;
     }
 
+    /**
+     * Call back for calendar
+     */
     private class DatePickerListener implements DatePickerDialog.OnDateSetListener {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -229,6 +233,9 @@ public class ModifyTask extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method to map UI to persistable
+     */
     private void updateTask() {
         TaskBO taskBO = new TaskBO();
         taskBO.setId(Long.valueOf(String.valueOf(id.getText())));

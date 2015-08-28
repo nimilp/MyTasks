@@ -63,7 +63,7 @@ public class MyTasksReceiver extends BroadcastReceiver {
                 try{
                 Date taskDate = DateUtils.getDate(taskBO.getDate());
                 if (taskDate != null) {
-                    ++counter;
+
 
                     if (calendar.before(taskDate)) {
                         dateDiff = (int) ((calendar.getTimeInMillis() - taskDate.getTime()) / MIILISECONDS_IN_A_DAY);
@@ -73,12 +73,14 @@ public class MyTasksReceiver extends BroadcastReceiver {
 
 
                     if (taskBO.isRemind()) {
+                        ++counter;
                         if (builder == null) {
                             Log.d(myName, "initializing the notification builder");
                             builder = new ArrayList<>(tasks.size());
                         }
+                        Log.d(myName,"Task days "+taskBO.getDaysToRemind()+", dateDiff "+dateDiff);
 
-                        if (taskBO.getDaysToRemind() >= dateDiff) {
+                        if (taskBO.getDaysToRemind() >= dateDiff && dateDiff >-1) {
 
                             builder.add(MessageFormat.format(context.getResources().getString(R.string.task_due_message), taskBO.getName(), dateDiff));
                         } else {
