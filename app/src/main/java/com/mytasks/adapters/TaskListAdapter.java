@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.mytasks.R;
 import com.mytasks.bo.TaskBO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,10 +20,12 @@ import java.util.List;
 public class TaskListAdapter extends BaseExpandableListAdapter{
 
     List<TaskBO> tasks;
+    List<TaskBO> original;
     Context context;
 
     public TaskListAdapter(Context context, List<TaskBO> tasks){
         this.tasks = tasks;
+        this.original = tasks;
         this.context = context;
     }
 
@@ -134,6 +137,25 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
 
     public void setTasks(List<TaskBO> tasks){
         this.tasks = tasks;
+        this.original = tasks;
         notifyDataSetChanged();
+    }
+
+    public void filter(String filter){
+
+        ArrayList<TaskBO>  newList = null;
+        if(filter==null || filter.trim().length()==0){
+            tasks = original;
+        }else{
+            newList = new ArrayList<>(10);
+            for(TaskBO task : original){
+                if(task.contains(filter)){
+                    newList.add(task);
+                }
+            }
+
+            tasks = newList;
+            notifyDataSetChanged();
+        }
     }
 }

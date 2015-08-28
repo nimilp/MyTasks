@@ -2,11 +2,16 @@ package com.mytasks;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().show();
         setContentView(R.layout.activity_main);
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_launcher);
 
@@ -75,14 +81,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //invoke the broadcast
-        startMyBroadCast();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.mnu_search));
+        if(searchView!=null){
+            Log.d("MainActvity","Got Search View");
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setIconified(false);
+        }
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(listViewAdapter!=null && !listViewAdapter.isEmpty()){
+                    listViewAdapter.filter(query);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                if(listViewAdapter!=null && !listViewAdapter.isEmpty()){
+                    listViewAdapter.filter(newText);
+                    return true;
+                }
+                return false;
+            }
+        };
+        searchView.setOnQueryTextListener(queryTextListener);
         return true;
     }
 
@@ -102,18 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * Method that invokes the broadcast
-     */
-    private void startMyBroadCast() {
-        long now = System.currentTimeMillis();
-        long time = 1000;
-        Intent myIntent = new Intent(MyTaskConstants.PENDING_INTENT_NAME);
-        myIntent.setClass(this, MyTasksReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -144,8 +165,6 @@ public class MainActivity extends AppCompatActivity {
                     listViewAdapter.setTasks(dao.getTasks());
                     Toast.makeText(this, R.string.task_deleted_successfully, Toast.LENGTH_SHORT).show();
                     break;
-//                default:
-//                    super.onActivityResult(requestCode,resultCode,data);
             }
 
     }

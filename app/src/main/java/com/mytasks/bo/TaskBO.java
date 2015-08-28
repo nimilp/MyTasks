@@ -95,4 +95,17 @@ public class TaskBO {
 
        return lastChangedDate;
     }
+
+    public boolean contains(String query){
+
+
+        if(query==null ){
+            return false;
+        }
+        query = query.toLowerCase();
+        return name.toLowerCase().contains(query) ||
+                desc.toLowerCase().contains(query) ||
+                comments.toLowerCase().contains(query) ||
+                date.toLowerCase().contains(query);
+    }
 }
