@@ -32,6 +32,9 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
 
     @Override
     public int getGroupCount() {
+        if(tasks==null || tasks.isEmpty()){
+            return 0;
+        }
         return tasks.size();
     }
 
@@ -141,6 +144,10 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
         notifyDataSetChanged();
     }
 
+    /**
+     * Util method for filtering the tasks
+     * @param filter
+     */
     public void filter(String filter){
 
         ArrayList<TaskBO>  newList = null;

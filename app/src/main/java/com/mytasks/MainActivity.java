@@ -1,21 +1,21 @@
 package com.mytasks;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.MenuCompat;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mytasks.adapters.TaskListAdapter;
@@ -32,15 +32,18 @@ public class MainActivity extends AppCompatActivity {
     private List<TaskBO> tasks;
     private TaskListAdapter listViewAdapter;
     private int previous = -1;
+    private CoordinatorLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().show();
         setContentView(R.layout.activity_main);
+        mainLayout = (CoordinatorLayout) findViewById(R.id.mainLayout);
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_launcher);
 
         listView = (ExpandableListView) findViewById(R.id.taskList);
+       //[ listView.requestFocus();
         if (dao == null) {
             dao = new TaskHDAO(getApplicationContext());
         }
@@ -87,17 +90,20 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.mnu_search));
-        if(searchView!=null){
-            Log.d("MainActvity","Got Search View");
+
+        if (searchView != null) {
+            Log.d("MainActvity", "Got Search View");
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setIconified(false);
         }
+
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if(listViewAdapter!=null && !listViewAdapter.isEmpty()){
+                if (listViewAdapter != null && !listViewAdapter.isEmpty()) {
                     listViewAdapter.filter(query);
                     return true;
                 }
@@ -107,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if(listViewAdapter!=null && !listViewAdapter.isEmpty()){
+                if (listViewAdapter != null) {
                     listViewAdapter.filter(newText);
                     return true;
                 }
@@ -134,38 +140,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-            switch (resultCode) {
-                case MyTaskConstants.INSERT_SUCCESSFUL_RESULT:
+        /*
+        *set snackbar
+         */
+        Snackbar snackbar = Snackbar.make(mainLayout, "", Snackbar.LENGTH_SHORT);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(getResources().getColor(R.color.primaryDark));
+        ((TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text)).setTextColor(Color.WHITE);
+        //snackbar ready
 
-                    tasks = dao.getTasks();
+        switch (resultCode) {
+            case MyTaskConstants.INSERT_SUCCESSFUL_RESULT:
+
+                tasks = dao.getTasks();
                     /*
                     initial insertion listViewAdapter will be null.
                     initialize it and set to listview
                      */
-                    if (listViewAdapter == null) {
+                if (listViewAdapter == null) {
 
-                        listViewAdapter = new TaskListAdapter(this, tasks);
-                        listView.setAdapter(listViewAdapter);
-                    }else{
-                        listViewAdapter.setTasks(tasks);
-                    }
+                    listViewAdapter = new TaskListAdapter(this, tasks);
+                    listView.setAdapter(listViewAdapter);
+                } else {
+                    listViewAdapter.setTasks(tasks);
+                }
 
-                    Toast.makeText(this, R.string.task_inserted_successfully, Toast.LENGTH_SHORT).show();
-                    break;
-                case MyTaskConstants.UPDATE_SUCCESSFUL_RESULT:
-                    listViewAdapter.setTasks(dao.getTasks());
-                    Toast.makeText(this, R.string.task_updated_successfully, Toast.LENGTH_SHORT).show();
-                    break;
-                case MyTaskConstants.DELETE_SUCCESSFUL_RESULT:
-                    listViewAdapter.setTasks(dao.getTasks());
-                    Toast.makeText(this, R.string.task_deleted_successfully, Toast.LENGTH_SHORT).show();
-                    break;
-            }
+                snackbar.setText(R.string.task_inserted_successfully).show();
+                break;
+            case MyTaskConstants.UPDATE_SUCCESSFUL_RESULT:
+                listViewAdapter.setTasks(dao.getTasks());
+                snackbar.setText(R.string.task_updated_successfully);
+                //snackbar.s
+                snackbar.show();
+                //  Toast.makeText(this, R.string.task_updated_successfully, Toast.LENGTH_SHORT).show();
+                break;
+            case MyTaskConstants.DELETE_SUCCESSFUL_RESULT:
+                listViewAdapter.setTasks(dao.getTasks());
+                snackbar.setText(R.string.task_deleted_successfully).show();
+                break;
+        }
 
     }
 }

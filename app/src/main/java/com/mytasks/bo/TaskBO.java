@@ -96,6 +96,11 @@ public class TaskBO {
        return lastChangedDate;
     }
 
+    /**
+     * Util method for searching anything inside the task
+     * @param query
+     * @return
+     */
     public boolean contains(String query){
 
 

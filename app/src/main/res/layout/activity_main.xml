@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:id="@+id/mainLayout"
     android:paddingTop="16dp"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <ExpandableListView
         android:id="@+id/taskList"
