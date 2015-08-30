@@ -35,5 +35,5 @@
     <string name="expired_message">Do you want to expire the task and create a new one for {0}?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="expired_date">Task expired. Please change date to future or remove recurrance.</string>
+    <string name="expired_date">Task expired. Please change date to future or remove recurrence.</string>
 </resources>

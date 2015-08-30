@@ -1,7 +1,6 @@
 package com.mytasks;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,8 +23,8 @@ import java.util.Calendar;
 
 public class AddTask extends AppCompatActivity {
 
-    private DatePickerListener datePickerCallBack = new DatePickerListener();
-    private Calendar calendar = Calendar.getInstance();
+    private final DatePickerListener datePickerCallBack = new DatePickerListener();
+    private final Calendar calendar = Calendar.getInstance();
     private EditText taskDate;
     private Spinner daySpinner;
     private CheckBox remindMein;
@@ -170,8 +169,5 @@ public class AddTask extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+
 }

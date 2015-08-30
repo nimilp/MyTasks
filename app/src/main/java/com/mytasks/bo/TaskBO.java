@@ -2,8 +2,10 @@ package com.mytasks.bo;
 
 import android.util.Log;
 
+import com.mytasks.utils.DateUtils;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -11,7 +13,9 @@ import java.util.Date;
  */
 public class TaskBO {
 
-
+    private static final String TAG = "TaskBO";
+private Calendar calendar =Calendar.getInstance();
+    private String logo;
     private long id;
     private String name;
     private String desc;
@@ -37,6 +41,13 @@ public class TaskBO {
 
     public void setName(String name) {
         this.name = name;
+        String[] split = name.split(" ");
+        if(split!=null && split.length>0){
+            logo = String.valueOf( split[0].charAt(0)).toUpperCase();
+            if(split.length>1){
+                logo = logo+String.valueOf(split[1].charAt(0)).toUpperCase();
+            }
+        }
     }
 
     public String getDesc() {
@@ -98,8 +109,8 @@ public class TaskBO {
 
     /**
      * Util method for searching anything inside the task
-     * @param query
-     * @return
+     * @param query filter
+     * @return return whether contains the query
      */
     public boolean contains(String query){
 
@@ -110,7 +121,23 @@ public class TaskBO {
         query = query.toLowerCase();
         return name.toLowerCase().contains(query) ||
                 desc.toLowerCase().contains(query) ||
-                comments.toLowerCase().contains(query) ||
+                //comments.toLowerCase().contains(query) ||
                 date.toLowerCase().contains(query);
+    }
+
+    public String getLogo(){
+        return logo;
+    }
+
+    public boolean isOverdue(){
+        boolean isOverdue = false;
+        try {
+            Date taskDate = DateUtils.getDate(date);
+            isOverdue = (calendar.getTimeInMillis()-taskDate.getTime())>0L;
+        } catch (ParseException e) {
+            Log.e(TAG,e.getMessage());
+           // return false;
+        }
+        return isOverdue;
     }
 }

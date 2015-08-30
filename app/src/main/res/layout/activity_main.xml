@@ -9,7 +9,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <ExpandableListView
+    <ListView
         android:id="@+id/taskList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.mytasks.R;
@@ -17,13 +16,13 @@ import java.util.List;
 /**
  * Created by nimilpeethambaran on 8/21/15.
  */
-public class TaskListAdapter extends BaseExpandableListAdapter{
+public class TaskListAdapter extends BaseExpandableListAdapter {
 
-    List<TaskBO> tasks;
-    List<TaskBO> original;
-    Context context;
+    private List<TaskBO> tasks;
+    private List<TaskBO> original;
+    private Context context;
 
-    public TaskListAdapter(Context context, List<TaskBO> tasks){
+    public TaskListAdapter(Context context, List<TaskBO> tasks) {
         this.tasks = tasks;
         this.original = tasks;
         this.context = context;
@@ -32,7 +31,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
 
     @Override
     public int getGroupCount() {
-        if(tasks==null || tasks.isEmpty()){
+        if (tasks == null || tasks.isEmpty()) {
             return 0;
         }
         return tasks.size();
@@ -55,7 +54,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
 
     @Override
     public long getGroupId(int groupPosition) {
-        return ((TaskBO)getGroup(groupPosition)).getId();
+        return ((TaskBO) getGroup(groupPosition)).getId();
     }
 
     @Override
@@ -72,13 +71,13 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
 
-        if(convertView == null){
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(R.layout.task_group,parent,false);
+            convertView = inflater.inflate(R.layout.task_group, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.name = (TextView) convertView.findViewById(R.id.taskName);
             convertView.setTag(viewHolder);
-        }else{
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
@@ -90,9 +89,9 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         ChildViewHolder viewHolder;
 
-        if(convertView == null){
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(R.layout.task_children,parent,false);
+            convertView = inflater.inflate(R.layout.task_children, parent, false);
             viewHolder = new ChildViewHolder();
             viewHolder.desc = (TextView) convertView.findViewById(R.id.descTxt);
             viewHolder.comment = (TextView) convertView.findViewById(R.id.cmtTxt);
@@ -100,7 +99,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
             viewHolder.date = (TextView) convertView.findViewById(R.id.dateTxt);
             viewHolder.days = (TextView) convertView.findViewById(R.id.daysTxt);
             convertView.setTag(viewHolder);
-        }else{
+        } else {
             viewHolder = (ChildViewHolder) convertView.getTag();
         }
 
@@ -108,8 +107,8 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
         viewHolder.comment.setText(tasks.get(groupPosition).getComments());
         viewHolder.recur.setText(tasks.get(groupPosition).isRecur() ? "True" : "False");
         viewHolder.date.setText(tasks.get(groupPosition).getDate());
-        if(tasks.get(groupPosition).isRemind()) {
-            ( (TableRow) convertView.findViewById(R.id.secretRow)).setVisibility(View.VISIBLE);
+        if (tasks.get(groupPosition).isRemind()) {
+            convertView.findViewById(R.id.secretRow).setVisibility(View.VISIBLE);
             viewHolder.days.setText(context.getResources().getStringArray(R.array.noOfDays)[tasks.get(groupPosition).getDaysToRemind()]);
         }
 
@@ -121,12 +120,12 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
         return true;
     }
 
-    private class ViewHolder{
+    private class ViewHolder {
         TextView name;
 
     }
 
-    private class ChildViewHolder{
+    private class ChildViewHolder {
         TextView desc;
         TextView comment;
         TextView date;
@@ -136,9 +135,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
     }
 
 
-
-
-    public void setTasks(List<TaskBO> tasks){
+    public void setTasks(List<TaskBO> tasks) {
         this.tasks = tasks;
         this.original = tasks;
         notifyDataSetChanged();
@@ -146,17 +143,18 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
 
     /**
      * Util method for filtering the tasks
+     *
      * @param filter
      */
-    public void filter(String filter){
+    public void filter(String filter) {
 
-        ArrayList<TaskBO>  newList = null;
-        if(filter==null || filter.trim().length()==0){
+        ArrayList<TaskBO> newList = null;
+        if (filter == null || filter.trim().length() == 0) {
             tasks = original;
-        }else{
+        } else {
             newList = new ArrayList<>(10);
-            for(TaskBO task : original){
-                if(task.contains(filter)){
+            for (TaskBO task : original) {
+                if (task.contains(filter)) {
                     newList.add(task);
                 }
             }

@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:text="This is a big big line of chunk data. Did I say it well?"
+                android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:ellipsize="none"
                 android:scrollHorizontally="false"/>
@@ -47,7 +47,7 @@
                 android:id="@+id/cmtTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Small Text"
+                android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
 
@@ -66,7 +66,7 @@
                 android:id="@+id/dateTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Small Text"
+                android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
 
@@ -86,7 +86,7 @@
                 android:id="@+id/recurText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Small Text"
+                android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
 
@@ -108,7 +108,7 @@
                 android:id="@+id/daysTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Small Text"
+                android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_gravity="end"/>
         </TableRow>

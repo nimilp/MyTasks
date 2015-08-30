@@ -3,7 +3,6 @@ package com.mytasks;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -196,7 +195,7 @@ public class ModifyTask extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             Date date = DateUtils.getDate(String.valueOf(taskDate.getText()));
             final Calendar cal = Calendar.getInstance();
-            cal.setTime(date);;
+            cal.setTime(date);
             cal.roll(Calendar.MONTH,1);
             builder.setTitle(getResources().getString(R.string.expired_warning_title));
             builder.setMessage(MessageFormat.format(getResources().getString(R.string.expired_message),DateUtils.parseDate(cal.getTime())));
@@ -252,10 +251,7 @@ public class ModifyTask extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+
 
     //on
 }

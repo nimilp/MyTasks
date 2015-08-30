@@ -14,11 +14,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ExpandableListView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mytasks.adapters.TaskListAdapter;
+import com.mytasks.adapters.TaskListSimpleAdaptor;
 import com.mytasks.bo.TaskBO;
 import com.mytasks.constants.MyTaskConstants;
 import com.mytasks.db.TaskHDAO;
@@ -27,10 +28,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ExpandableListView listView;
+    private ListView listView;
     private TaskHDAO dao;
     private List<TaskBO> tasks;
-    private TaskListAdapter listViewAdapter;
+    private TaskListSimpleAdaptor listViewAdapter;
     private int previous = -1;
     private CoordinatorLayout mainLayout;
 
@@ -42,35 +43,14 @@ public class MainActivity extends AppCompatActivity {
         mainLayout = (CoordinatorLayout) findViewById(R.id.mainLayout);
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_launcher);
 
-        listView = (ExpandableListView) findViewById(R.id.taskList);
-       //[ listView.requestFocus();
+        listView = (ListView) findViewById(R.id.taskList);
+        //[ listView.requestFocus();
         if (dao == null) {
             dao = new TaskHDAO(getApplicationContext());
         }
         tasks = dao.getTasks();
         if (tasks != null && !tasks.isEmpty()) {
-            listViewAdapter = new TaskListAdapter(this, tasks);
-            listView.setAdapter(listViewAdapter);
-            listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-                @Override
-                public void onGroupExpand(int groupPosition) {
-                    if (previous != -1 && groupPosition != previous) {
-                        listView.collapseGroup(previous);
-                    }
-                    previous = groupPosition;
-                }
-            });
-            listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-                @Override
-                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
-                    Intent intent = new Intent(v.getContext(), ModifyTask.class);
-                    TaskBO taskBO = (TaskBO) ((TaskListAdapter) parent.getExpandableListAdapter()).getGroup(groupPosition);
-                    intent.putExtra(MyTaskConstants.TASK_ID, id);
-                    startActivityForResult(intent, MyTaskConstants.UPDATE_REQUEST);
-                    return true;
-                }
-            });
+            prepareListView();
         } else {
             Toast.makeText(this, R.string.no_tasks, Toast.LENGTH_SHORT).show();
         }
@@ -86,6 +66,44 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void prepareListView() {
+        listViewAdapter = new TaskListSimpleAdaptor(this, tasks);
+        listView.setAdapter(listViewAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(view.getContext(), ModifyTask.class);
+//                TaskBO taskBO = (TaskBO) ((TaskListAdapter) parent.getExpandableListAdapter()).getGroup(groupPosition);
+                intent.putExtra(MyTaskConstants.TASK_ID, id);
+                startActivityForResult(intent, MyTaskConstants.UPDATE_REQUEST);
+            }
+        });
+    }
+
+    //    private void prepareExpandableListView(){
+//        listViewAdapter = new TaskListAdapter(this, tasks);
+//        listView.setAdapter(listViewAdapter);
+//        listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+//            @Override
+//            public void onGroupExpand(int groupPosition) {
+//                if (previous != -1 && groupPosition != previous) {
+//                    listView.collapseGroup(previous);
+//                }
+//                previous = groupPosition;
+//            }
+//        });
+//        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+//            @Override
+//            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+//
+//                Intent intent = new Intent(v.getContext(), ModifyTask.class);
+//                TaskBO taskBO = (TaskBO) ((TaskListAdapter) parent.getExpandableListAdapter()).getGroup(groupPosition);
+//                intent.putExtra(MyTaskConstants.TASK_ID, id);
+//                startActivityForResult(intent, MyTaskConstants.UPDATE_REQUEST);
+//                return true;
+//            }
+//        });
+//    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -97,30 +115,32 @@ public class MainActivity extends AppCompatActivity {
         if (searchView != null) {
             Log.d("MainActvity", "Got Search View");
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            searchView.setIconified(false);
+            searchView.setIconified(true);
+            searchView.setFocusableInTouchMode(true);
+
+
+            SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    if (listViewAdapter != null && !listViewAdapter.isEmpty()) {
+                        listViewAdapter.filter(query);
+                        return true;
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+
+                    if (listViewAdapter != null) {
+                        listViewAdapter.filter(newText);
+                        return true;
+                    }
+                    return false;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
         }
-
-        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (listViewAdapter != null && !listViewAdapter.isEmpty()) {
-                    listViewAdapter.filter(query);
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                if (listViewAdapter != null) {
-                    listViewAdapter.filter(newText);
-                    return true;
-                }
-                return false;
-            }
-        };
-        searchView.setOnQueryTextListener(queryTextListener);
         return true;
     }
 
@@ -162,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                      */
                 if (listViewAdapter == null) {
 
-                    listViewAdapter = new TaskListAdapter(this, tasks);
+                    listViewAdapter = new TaskListSimpleAdaptor(this, tasks);
                     listView.setAdapter(listViewAdapter);
                 } else {
                     listViewAdapter.setTasks(tasks);

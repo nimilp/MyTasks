@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Parcelable;
 
 import com.mytasks.bo.TaskBO;
 import com.mytasks.constants.MyTaskConstants;
@@ -14,7 +13,6 @@ import static com.mytasks.db.constants.SQLConstants.TASK;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,6 +51,7 @@ public class TaskHDAO implements Serializable {
 
                 taskList.add(task);
             }
+            query.close();
             dbHelper.close();
 
         }
@@ -78,6 +77,7 @@ public class TaskHDAO implements Serializable {
 
                 taskList.add(task);
             }
+            query.close();
             dbHelper.close();
 
         }
@@ -104,6 +104,7 @@ public class TaskHDAO implements Serializable {
                 task.setLastChangedDate(query.getString(8));
 
             }
+            query.close();
             dbHelper.close();
         }
         return task;
