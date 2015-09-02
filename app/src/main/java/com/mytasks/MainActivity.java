@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_launcher);
 
         listView = (ListView) findViewById(R.id.taskList);
+        initalizeListView();
         //[ listView.requestFocus();
         if (dao == null) {
             dao = new TaskHDAO(getApplicationContext());
@@ -66,9 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void prepareListView() {
-        listViewAdapter = new TaskListSimpleAdaptor(this, tasks);
-        listView.setAdapter(listViewAdapter);
+    private void initalizeListView(){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -78,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, MyTaskConstants.UPDATE_REQUEST);
             }
         });
+    }
+    private void prepareListView() {
+        listViewAdapter = new TaskListSimpleAdaptor(this, tasks);
+        listView.setAdapter(listViewAdapter);
+
     }
 
     //    private void prepareExpandableListView(){
